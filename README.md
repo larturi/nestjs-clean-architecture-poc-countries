@@ -37,6 +37,20 @@ pnpm run start:dev
 
 La API estará disponible en `http://localhost:3000`
 
+## 📚 Documentación API
+
+La documentación completa de la API está disponible en Swagger UI:
+
+**🔗 [http://localhost:3000/api/docs](http://localhost:3000/api/docs)**
+
+La documentación incluye:
+
+- Descripción completa de todos los endpoints
+- Ejemplos de request/response
+- Validaciones de campos
+- Códigos de estado HTTP
+- Interfaz interactiva para probar los endpoints
+
 ## 📋 Endpoints
 
 ### Countries
