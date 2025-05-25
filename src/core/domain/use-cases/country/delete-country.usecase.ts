@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CountryRepository } from '../../domain/repository/country.repository';
+import { CountryRepository } from '../../repository/country.repository';
 
 @Injectable()
 export class DeleteCountryUseCase {

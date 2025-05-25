@@ -17,16 +17,16 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { CreateCountryUseCase } from '../../domain/use-cases/create-country.usecase';
-import { UpdateCountryUseCase } from '../../domain/use-cases/update-country.usecase';
-import { GetCountriesUseCase } from '../../domain/use-cases/get-countries.usecase';
-import { GetCountryByIdUseCase } from '../../domain/use-cases/get-country-by-id.usecase';
-import { DeleteCountryUseCase } from '../../domain/use-cases/delete-country.usecase';
+import { CreateCountryUseCase } from '../../core/domain/use-cases/country/create-country.usecase';
+import { UpdateCountryUseCase } from '../../core/domain/use-cases/country/update-country.usecase';
+import { GetCountriesUseCase } from '../../core/domain/use-cases/country/get-countries.usecase';
+import { GetCountryByIdUseCase } from '../../core/domain/use-cases/country/get-country-by-id.usecase';
+import { DeleteCountryUseCase } from '../../core/domain/use-cases/country/delete-country.usecase';
 import {
   CreateCountryDto,
   UpdateCountryDto,
   CountryResponseDto,
-} from '../../application/dtos/country.dto';
+} from '../../core/application/dtos/country.dto';
 
 @ApiTags('countries')
 @Controller('countries')

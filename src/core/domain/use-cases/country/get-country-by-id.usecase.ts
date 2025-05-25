@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Country } from '../../domain/entities/country.entity';
-import { CountryRepository } from '../../domain/repository/country.repository';
+import { Country } from '../../entities/country.entity';
+import { CountryRepository } from '../../repository/country.repository';
 
 @Injectable()
 export class GetCountryByIdUseCase {
