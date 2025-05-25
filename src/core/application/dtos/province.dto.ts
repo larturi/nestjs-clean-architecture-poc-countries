@@ -62,9 +62,15 @@ export class ProvinceResponseDto {
   })
   countryId: string;
 
-  constructor(id: string, name: string, countryId: string) {
+  @ApiProperty({
+    description: 'Información del país',
+    required: false,
+  })
+  country?: any;
+
+  constructor(id: string, name: string, country?: any) {
     this.id = id;
     this.name = name;
-    this.countryId = countryId;
+    this.country = country;
   }
 }

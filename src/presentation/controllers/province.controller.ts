@@ -50,10 +50,17 @@ export class ProvinceController {
   })
   async getAllProvinces(): Promise<ProvinceResponseDto[]> {
     const provinces = await this.getProvincesUseCase.execute();
-    return provinces.map(
-      (province) =>
-        new ProvinceResponseDto(province.id, province.name, province.countryId),
-    );
+
+    return provinces.map((province) => {
+      const countryData = province.country
+        ? {
+            id: province.country.id,
+            name: province.country.name,
+          }
+        : undefined;
+
+      return new ProvinceResponseDto(province.id, province.name, countryData);
+    });
   }
 
   @Get(':id')

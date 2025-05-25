@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Province } from '../../../../core/domain/entities/province.entity';
 import { ProvinceRepository } from '../../../../core/domain/repository/province.repository';
+import { Country } from 'src/core/domain/entities/country.entity';
 
 @Injectable()
 export class ProvinceRepositoryImpl implements ProvinceRepository {
@@ -10,11 +11,27 @@ export class ProvinceRepositoryImpl implements ProvinceRepository {
   async findAll(): Promise<Province[]> {
     const provinces = await this.prisma.province.findMany({
       orderBy: { name: 'asc' },
+      include: {
+        country: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
-    return provinces.map(
-      (province) =>
-        new Province(province.id, province.countryId, province.name),
-    );
+    return provinces.map((province) => {
+      const country = province?.country
+        ? new Country(province.country.id, province.country.name)
+        : undefined;
+
+      return new Province(
+        province.id,
+        province.countryId,
+        province.name,
+        country,
+      );
+    });
   }
 
   async findById(id: string): Promise<Province | null> {
