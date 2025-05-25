@@ -125,6 +125,42 @@ curl -X PUT http://localhost:3000/provinces/{id} \
 curl -X DELETE http://localhost:3000/provinces/{id}
 ```
 
+### Localities
+
+#### Obtener todas las localidades
+
+```bash
+curl -X GET http://localhost:3000/localities
+```
+
+#### Obtener localidad por ID
+
+```bash
+curl -X GET http://localhost:3000/localities/{id}
+```
+
+#### Crear localidad
+
+```bash
+curl -X POST http://localhost:3000/localities \
+  -H "Content-Type: application/json" \
+  -d '{"name": "La Plata", "provinceId": "id-de-provincia"}'
+```
+
+#### Actualizar localidad
+
+```bash
+curl -X PUT http://localhost:3000/localities/{id} \
+  -H "Content-Type: application/json" \
+  -d '{"name": "La Plata", "provinceId": "id-de-provincia"}'
+```
+
+#### Eliminar localidad
+
+```bash
+curl -X DELETE http://localhost:3000/localities/{id}
+```
+
 ## 🏗️ Estructura del Proyecto
 
 Este proyecto sigue los principios de **Clean Architecture**, organizando el código en capas bien definidas:
