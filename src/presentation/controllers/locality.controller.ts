@@ -50,14 +50,29 @@ export class LocalityController {
   })
   async getAllLocalities(): Promise<LocalityResponseDto[]> {
     const localities = await this.getLocalitiesUseCase.execute();
-    return localities.map(
-      (locality) =>
-        new LocalityResponseDto(
-          locality.id,
-          locality.name,
-          locality.provinceId,
-        ),
-    );
+    return localities.map((locality) => {
+      const provinceData = locality.province
+        ? {
+            id: locality.province.id,
+            name: locality.province.name,
+            countryId: locality.province.countryId,
+          }
+        : undefined;
+
+      const countryData = locality.country
+        ? {
+            id: locality.country.id,
+            name: locality.country.name,
+          }
+        : undefined;
+
+      return new LocalityResponseDto(
+        locality.id,
+        locality.name,
+        provinceData,
+        countryData,
+      );
+    });
   }
 
   @Get(':id')
@@ -78,10 +93,27 @@ export class LocalityController {
     if (!locality) {
       throw new HttpException('Locality not found', HttpStatus.NOT_FOUND);
     }
+
+    const provinceData = locality.province
+      ? {
+          id: locality.province.id,
+          name: locality.province.name,
+          countryId: locality.province.countryId,
+        }
+      : undefined;
+
+    const countryData = locality.country
+      ? {
+          id: locality.country.id,
+          name: locality.country.name,
+        }
+      : undefined;
+
     return new LocalityResponseDto(
       locality.id,
       locality.name,
-      locality.provinceId,
+      provinceData,
+      countryData,
     );
   }
 
@@ -101,10 +133,27 @@ export class LocalityController {
       createLocalityDto.name,
       createLocalityDto.provinceId,
     );
+
+    const provinceData = locality.province
+      ? {
+          id: locality.province.id,
+          name: locality.province.name,
+          countryId: locality.province.countryId,
+        }
+      : undefined;
+
+    const countryData = locality.country
+      ? {
+          id: locality.country.id,
+          name: locality.country.name,
+        }
+      : undefined;
+
     return new LocalityResponseDto(
       locality.id,
       locality.name,
-      locality.provinceId,
+      provinceData,
+      countryData,
     );
   }
 

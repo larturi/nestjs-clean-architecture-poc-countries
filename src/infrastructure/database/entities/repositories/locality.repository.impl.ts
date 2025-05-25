@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Locality } from '../../../../core/domain/entities/locality.entity';
+import { Province } from '../../../../core/domain/entities/province.entity';
+import { Country } from '../../../../core/domain/entities/country.entity';
 import { LocalityRepository } from '../../../../core/domain/repository/locality.repository';
 
 @Injectable()
@@ -10,27 +12,113 @@ export class LocalityRepositoryImpl implements LocalityRepository {
   async findAll(): Promise<Locality[]> {
     const localities = await this.prisma.locality.findMany({
       orderBy: { name: 'asc' },
+      include: {
+        province: {
+          include: {
+            country: true,
+          },
+        },
+      },
     });
-    return localities.map(
-      (locality) =>
-        new Locality(locality.id, locality.provinceId, locality.name),
-    );
+
+    return localities.map((locality) => {
+      const province = locality.province
+        ? new Province(
+            locality.province.id,
+            locality.province.countryId,
+            locality.province.name,
+          )
+        : undefined;
+
+      const country = locality.province?.country
+        ? new Country(
+            locality.province.country.id,
+            locality.province.country.name,
+          )
+        : undefined;
+
+      return new Locality(
+        locality.id,
+        locality.provinceId,
+        locality.name,
+        province,
+        country,
+      );
+    });
   }
 
   async findById(id: string): Promise<Locality | null> {
     const locality = await this.prisma.locality.findUnique({
       where: { id },
+      include: {
+        province: {
+          include: {
+            country: true,
+          },
+        },
+      },
     });
-    return locality
-      ? new Locality(locality.id, locality.provinceId, locality.name)
-      : null;
+
+    if (!locality) return null;
+
+    const province = locality.province
+      ? new Province(
+          locality.province.id,
+          locality.province.countryId,
+          locality.province.name,
+        )
+      : undefined;
+
+    const country = locality.province?.country
+      ? new Country(
+          locality.province.country.id,
+          locality.province.country.name,
+        )
+      : undefined;
+
+    return new Locality(
+      locality.id,
+      locality.provinceId,
+      locality.name,
+      province,
+      country,
+    );
   }
 
   async create(name: string, provinceId: string): Promise<Locality> {
     const locality = await this.prisma.locality.create({
       data: { name, provinceId },
+      include: {
+        province: {
+          include: {
+            country: true,
+          },
+        },
+      },
     });
-    return new Locality(locality.id, locality.provinceId, locality.name);
+
+    const province = locality.province
+      ? new Province(
+          locality.province.id,
+          locality.province.countryId,
+          locality.province.name,
+        )
+      : undefined;
+
+    const country = locality.province?.country
+      ? new Country(
+          locality.province.country.id,
+          locality.province.country.name,
+        )
+      : undefined;
+
+    return new Locality(
+      locality.id,
+      locality.provinceId,
+      locality.name,
+      province,
+      country,
+    );
   }
 
   async update(
@@ -42,8 +130,37 @@ export class LocalityRepositoryImpl implements LocalityRepository {
       const locality = await this.prisma.locality.update({
         where: { id },
         data: { name, provinceId },
+        include: {
+          province: {
+            include: {
+              country: true,
+            },
+          },
+        },
       });
-      return new Locality(locality.id, locality.provinceId, locality.name);
+
+      const province = locality.province
+        ? new Province(
+            locality.province.id,
+            locality.province.countryId,
+            locality.province.name,
+          )
+        : undefined;
+
+      const country = locality.province?.country
+        ? new Country(
+            locality.province.country.id,
+            locality.province.country.name,
+          )
+        : undefined;
+
+      return new Locality(
+        locality.id,
+        locality.provinceId,
+        locality.name,
+        province,
+        country,
+      );
     } catch (error) {
       return null;
     }

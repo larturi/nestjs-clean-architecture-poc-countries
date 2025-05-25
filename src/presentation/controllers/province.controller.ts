@@ -156,11 +156,13 @@ export class ProvinceController {
     },
   })
   @ApiResponse({ status: 404, description: 'Provincia no encontrada' })
+  @ApiResponse({
+    status: 400,
+    description:
+      'La provincia no puede ser eliminada porque tiene localidades asociadas',
+  })
   async deleteProvince(@Param('id') id: string): Promise<{ message: string }> {
-    const deleted = await this.deleteProvinceUseCase.execute(id);
-    if (!deleted) {
-      throw new HttpException('Province not found', HttpStatus.NOT_FOUND);
-    }
+    await this.deleteProvinceUseCase.execute(id);
     return { message: 'Province deleted successfully' };
   }
 }

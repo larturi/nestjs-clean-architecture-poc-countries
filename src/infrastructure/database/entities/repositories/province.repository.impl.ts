@@ -13,7 +13,7 @@ export class ProvinceRepositoryImpl implements ProvinceRepository {
     });
     return provinces.map(
       (province) =>
-        new Province(province.id, province.name, province.countryId),
+        new Province(province.id, province.countryId, province.name),
     );
   }
 
@@ -22,7 +22,7 @@ export class ProvinceRepositoryImpl implements ProvinceRepository {
       where: { id },
     });
     return province
-      ? new Province(province.id, province.name, province.countryId)
+      ? new Province(province.id, province.countryId, province.name)
       : null;
   }
 
@@ -30,7 +30,7 @@ export class ProvinceRepositoryImpl implements ProvinceRepository {
     const province = await this.prisma.province.create({
       data: { name, countryId },
     });
-    return new Province(province.id, province.name, province.countryId);
+    return new Province(province.id, province.countryId, province.name);
   }
 
   async update(
@@ -43,7 +43,7 @@ export class ProvinceRepositoryImpl implements ProvinceRepository {
         where: { id },
         data: { name, countryId },
       });
-      return new Province(province.id, province.name, province.countryId);
+      return new Province(province.id, province.countryId, province.name);
     } catch (error) {
       return null;
     }
@@ -51,12 +51,30 @@ export class ProvinceRepositoryImpl implements ProvinceRepository {
 
   async delete(id: string): Promise<boolean> {
     try {
+      // Primero verificar si la provincia existe
+      const province = await this.prisma.province.findUnique({
+        where: { id },
+        include: { localities: true },
+      });
+
+      if (!province) {
+        throw new Error(`Province with id ${id} not found`);
+      }
+
+      // Verificar si tiene localidades asociadas
+      if (province.localities.length > 0) {
+        throw new Error(
+          `Cannot delete province ${id}. It has ${province.localities.length} associated localities`,
+        );
+      }
+
       await this.prisma.province.delete({
         where: { id },
       });
       return true;
     } catch (error) {
-      return false;
+      console.error('Error deleting province:', error.message);
+      throw error;
     }
   }
 }
