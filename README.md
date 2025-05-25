@@ -89,6 +89,42 @@ curl -X PUT http://localhost:3000/countries/{id} \
 curl -X DELETE http://localhost:3000/countries/{id}
 ```
 
+### Provinces
+
+#### Obtener todos las provincias
+
+```bash
+curl -X GET http://localhost:3000/provinces
+```
+
+#### Obtener provincia por ID
+
+```bash
+curl -X GET http://localhost:3000/provinces/{id}
+```
+
+#### Crear provincia
+
+```bash
+curl -X POST http://localhost:3000/provinces \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Buenos Aires", "countryId": "id-de-pais"}'
+```
+
+#### Actualizar provincia
+
+```bash
+curl -X PUT http://localhost:3000/provinces/{id} \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Buenos Aires", "countryId": "id-de-pais"}'
+```
+
+#### Eliminar provincia
+
+```bash
+curl -X DELETE http://localhost:3000/provinces/{id}
+```
+
 ## 🏗️ Estructura del Proyecto
 
 Este proyecto sigue los principios de **Clean Architecture**, organizando el código en capas bien definidas:
